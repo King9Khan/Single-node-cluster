@@ -1,0 +1,25 @@
+#!/bin/bash
+#Single Node Installation
+sudo apt-get update -y
+yes "" | ssh-keygen -q -P ''
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+sudo apt-get install openjdk-7-jdk -y
+wget https://archive.apache.org/dist/hadoop/core/hadoop-1.2.1/hadoop-1.2.1.tar.gz
+tar -xzvf hadoop-1.2.1.tar.gz 
+sudo mv hadoop-1.2.1 /usr/local/Hadoop
+mkdir kingkhan
+sed -i ' $ a export HADOOP_PREFIX=/usr/local/hadoop/\nexport PATH=$PATH:$HADOOP_PREFIX/bin\nexport JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64\nexport PATH=$PATH:$JAVA_HOME'  ~/.bashrc
+source ~/.bashrc
+sed -i ' $ a export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64\nexport HADOOP_OPTS=-Djava.net.preferIPV4Stack=true'  /usr/local/hadoop/conf/hadoop-env.sh
+sed -i ' /<configuration>/ a <property>\n<name>fs.default.name</name>\n<value>hdfs://localhost:9000</value>\n</property>\n<property>\n<name>hadoop.tmp.dir</name>\n<value>/usr/local/hadoop/tmp</value>\n</property>' /usr/local/hadoop/conf/core-site.xml 
+sed -i ' /<configuration>/ a <property>\n<name>dfs.replication</name>\n<value>1</value>\n</property> ' /usr/local/hadoop/conf/hdfs-site.xml 
+sed -i ' /<configuration>/ a <property>\n<name>mapred.job.tracker</name>\n<value>hdfs://localhost:9001</value>\n</property> ' /usr/local/hadoop/conf/mapred-site.xml 
+mkdir /usr/local/hadoop/tmp
+exec bash
+
+
+
+
+
+
+
